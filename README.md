@@ -2,7 +2,7 @@
 
 # Dotfiles & Developer Environment
 
-🚀 Dotfiles & Developer Environment. Supports Ubuntu 18.04 + macOS Catalina + Windows 10 w/ WSL
+Dotfiles & Developer Environment. Supports Ubuntu 18.04 + macOS Catalina + Windows 10 w/ WSL 🚀
 
 </div>
 
