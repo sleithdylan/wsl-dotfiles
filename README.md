@@ -101,7 +101,7 @@ See the [development of WSL on GitHub](https://github.com/microsoft/WSL).
 2. Install latest Node.js LTS version:
 
    ```
-   n lts
+   nvm install --lts
    ```
 
 3. Check everything works:
