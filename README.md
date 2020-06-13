@@ -88,13 +88,15 @@ See the [development of WSL on GitHub](https://github.com/microsoft/WSL).
 
 1. Install Node Version Manager
 
-   We will use [n](https://github.com/tj/n) to manage versions of node.js. To install, we need to run:
+   We will use [zsh-nvm](https://github.com/lukechilds/zsh-nvm) to manage versions of node.js. To install as a Oh My ZSH plugin, we need to run:
 
    ```
-   curl -L https://git.io/n-install | bash
+   git clone https://github.com/lukechilds/zsh-nvm ~/.oh-my-zsh/custom/plugins/zsh-nvm
    ```
 
-   Note: this may fail if `build-essential` tools are not installed in previous step.
+   Then load as a plugin in your `plugins=(zsh-nvm)`
+
+   Keep in mind that plugins need to be added before `oh-my-zsh.sh` is sourced.
 
 2. Install latest Node.js LTS version:
 
@@ -171,6 +173,13 @@ cd ~ && git clone https://github.com/sleithdylan/dotfiles ~/projects/dotfiles
 bash ~/projects/dotfiles/scripts/setup-shell.bash
 ```
 
+- Note: If you need to edit your .zshrc, type in terminal:
+
+```shell
+# code /home/dylan/.zshrc
+code ~/.zshrc
+```
+
 3. Update `config/initial-asdf-plugins.txt` with the desired `asdf` plugins you wish to use. The defaults are listed at the beginning of this section.
 
 4. Run the `setup-devtools.bash` script
@@ -179,7 +188,7 @@ bash ~/projects/dotfiles/scripts/setup-shell.bash
 bash ~/projects/dotfiles/scripts/setup-devtools.bash
 ```
 
-- Run the `setup-devtools.bash` script again (this is because `asdf` requires a shell restart to take effect. The script accounts for re-running)
+5. Run the `setup-devtools.bash` script again (this is because `asdf` requires a shell restart to take effect. The script accounts for re-running)
 
 ```shell
 bash ~/projects/dotfiles/scripts/setup-devtools.bash
@@ -187,7 +196,7 @@ bash ~/projects/dotfiles/scripts/setup-devtools.bash
 
 ### Cleanup
 
-- Run the `cleanup.bash` script
+Run the `cleanup.bash` script
 
 ```shell
 bash ~/projects/dotfiles/scripts/cleanup.bash
