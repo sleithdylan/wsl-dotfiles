@@ -76,18 +76,17 @@ fpath=($HOME/.asdf/completions $fpath)
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
-  asdf
-  docker
-  fzf
-  # gcloud
-  git
-  go
-  node
-  npm
-  npx
-  python
-  pip
-  zsh-syntax-highlighting
+	asdf
+	docker
+	# gcloud
+	git
+	golang
+	node
+	npm
+	npx
+	python
+	pip
+	zsh-syntax-highlighting
 )
 
 # User configuration
@@ -99,9 +98,9 @@ plugins=(
 
 # Preferred editor for local and remote sessions
 if [[ -n $SSH_CONNECTION ]]; then
-  export EDITOR='code'
+	export EDITOR='code'
 else
-  export EDITOR='nano'
+	export EDITOR='nano'
 fi
 
 # Compilation flags
@@ -131,25 +130,25 @@ HISTFILE=~/.zsh_history
 
 # add resource to path (once and only once)
 add_path_to_global_path() {
-  local TO_ADD="$1"
+	local TO_ADD="$1"
 
-  # if in $PATH, remove
-  # replace all occurrences - ${parameter//pattern/string}
-  [[ ":$PATH:" == *":${TO_ADD}:"* ]] && PATH="${PATH//$TO_ADD:/}"
-  # add to PATH
-  PATH="${TO_ADD}:$PATH"
-  printf "✅  added to global path:\\t%s\\n" "$1"
+	# if in $PATH, remove
+	# replace all occurrences - ${parameter//pattern/string}
+	[[ ":$PATH:" == *":${TO_ADD}:"* ]] && PATH="${PATH//$TO_ADD:/}"
+	# add to PATH
+	PATH="${TO_ADD}:$PATH"
+	printf "✅  added to global path:\\t%s\\n" "$1"
 }
 
 # Will source the provided resource if the resource exists
 source_if_exists() {
-  if [ -f "$1" ]; then
-    # shellcheck disable=SC1090
-    . "$1"
-    printf "✅  Sourced:\\t%s\\n" "$1"
-  else
-    printf "🚨  Failed to source: %s\\n" "$1"
-  fi
+	if [ -f "$1" ]; then
+		# shellcheck disable=SC1090
+		. "$1"
+		printf "✅  Sourced:\\t%s\\n" "$1"
+	else
+		printf "🚨  Failed to source: %s\\n" "$1"
+	fi
 }
 
 ### oh-my-zsh
@@ -163,7 +162,7 @@ source_if_exists "$HOME/z.sh"
 
 ### asdf plugins
 #### JAVA_HOME
-source_if_exists "$HOME/.asdf/plugins/java/set-java-home.sh"
+# source_if_exists "$HOME/.asdf/plugins/java/set-java-home.sh"
 
 ### aliases
 source_if_exists "$HOME/.aliases"
@@ -172,8 +171,17 @@ source_if_exists "$HOME/.aliases"
 # WIP. See here for now - https://code.visualstudio.com/docs/setup/mac#_launching-from-the-command-line
 # add_path_to_global_path "/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 
+# Homebrew on Linux
+[ "$(uname -s)" = "Linux" ] &&
+	printf "%s\\n" "🍺  Load Homebrew on Linux" &&
+	eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+printf "%s\\n" "🦋  Load Navi"
+# shellcheck disable=SC1090
+source <(navi widget zsh)
+
 ### https://starship.rs
-printf "🚀  Load Starship shell prompt\\n"
+printf "%s\\n" "🚀  Load Starship shell prompt"
 eval "$(starship init zsh)"
 
 # printf "\\n🏞  Environment Variables: \\n\\n"

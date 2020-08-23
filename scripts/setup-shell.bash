@@ -5,25 +5,34 @@ set -eo pipefail
 # shellcheck source=./utils.bash
 source "$(dirname "$0")/utils.bash"
 
+# Homebrew
+if is_installed "brew"; then
+	log_success "Homebrew already installed"
+else
+	if [ -n "$LINUX" ]; then
+		sudo apt-get install build-essential curl file git -y
+		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+	elif [ -n "$MACOS" ]; then
+		xcode-select --install
+		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+	fi
+	log_success "Brew installed successfully"
+fi
+
 # Dependencies
 log_info "Installing dependencies"
 if [ -n "$LINUX" ]; then
 	sudo apt update -y
-	sudo apt install git curl shellcheck fontconfig -y
+	sudo apt install git curl unzip fontconfig -y
 	sudo apt install \
 		automake autoconf libreadline-dev \
 		libncurses-dev libssl-dev libyaml-dev \
-		libxslt-dev libffi-dev libtool unixodbc-dev \
-		unzip -y
+		libxslt-dev libffi-dev libtool unixodbc-dev -y
 elif [ -n "$MACOS" ]; then
-	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-	xcode-select --install
-	brew install curl
-	brew install shellcheck
+	brew install curl unzip
 	brew install \
 		coreutils automake autoconf openssl \
-		libyaml readline libxslt libtool unixodbc \
-		unzip curl
+		libyaml readline libxslt libtool unixodbc
 else
 	log_failure_and_exit "🚨  Script only supports macOS and Ubuntu"
 fi
@@ -55,7 +64,9 @@ else
 fi
 
 # add fonts for powerline
-installed_fonts=$(fc-list : file family | grep -i powerline)
+# WARN: I have had issues with "fc-list | grep" on WSL2. The temp solution is toggle the comments of "installed_fonts" lines
+# installed_fonts=""
+installed_fonts=$(fc-list : file family | grep --ignore-case "powerline")
 if [ -n "$installed_fonts" ]; then
 	log_success "Powerline fonts already installed"
 else
@@ -72,38 +83,26 @@ else
 	log_info "Setting default shell to ZSH"
 	chsh -s "$(command -v zsh)"
 fi
-
 ############ END: ZSH
 
-# starship theme
-if is_installed starship; then
-	log_success "Starship theme already installed"
-else
-	log_info "Installing Starship theme 🚀"
-	curl -fsSL https://starship.rs/install.sh | bash
-fi
-
-# install z
-if [ -f "${HOME}/z.sh" ]; then
-	log_success "z.sh already installed"
-else
-	log_info "Installing z"
-	wget -P "${HOME}" https://raw.githubusercontent.com/rupa/z/master/z.sh
-fi
-
-# install fzf
-if [ -d "${HOME}/.fzf" ]; then
-	log_success "fzf already installed"
-else
-	log_info "Installing fzf"
-	git clone --depth 1 https://github.com/junegunn/fzf.git "${HOME}/.fzf"
-	~/.fzf/install --key-bindings --completion --no-update-rc --no-bash --no-zsh
-fi
-
-# navi - https://github.com/denisidoro/navi
+# navi		- https://github.com/denisidoro/navi
+# z			- https://github.com/rupa/z
+# starship	- https://starship.rs/
+brew install \
+	navi \
+	z \
+	starship
 
 # dynamically symlink all config/dotfiles to home directory
 # shellcheck source=./symlink-dotfiles.bash
 source "$(dirname "$0")/symlink-dotfiles.bash"
 
 log_info "🏁  Fin"
+
+# setup git config
+log_warning "Do not forget to run:"
+log_info "git config --global user.name <your name>"
+log_info "git config --global user.email <your@email.com>"
+log_info "git config --global core.editor <editor of choice>"
+log_info "git config credential.helper store"
+log_info "git config --global credential.helper 'cache --timeout 7200'"

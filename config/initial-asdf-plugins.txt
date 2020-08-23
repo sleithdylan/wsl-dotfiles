@@ -1,5 +1,6 @@
 firebase latest
-nodejs 12.16.1
+nodejs 14.8.0
 python latest
 shellcheck latest
+shfmt latest
 terraform latest
